@@ -23,6 +23,9 @@ import { CreateProductMui } from "./pages/products/createMui";
 
 import { ListCategoriesMui } from "./pages/categories/listMui";
 
+import { FormTestMui } from "./pages/gestionMagasin/form";
+import { FormTestMuiBoutique } from "./pages/gestionMagasin/formBoutique";
+
 import { Login } from "./pages/login";
 import { LoginMui } from "./pages/loginMui";
 import { Header } from "./components/header";
@@ -81,7 +84,8 @@ export default function App(): JSX.Element {
                 />
                 <Route path="/products">
                   {/* <Route index element={<ListProducts />} /> */}
-                  <Route index element={<ListProductsMui />} />
+                  {/* <Route index element={<ListProductsMui />} /> */}
+                  <Route index element={<FormTestMuiBoutique />} />
                   {/* <Route path=":id" element={<ShowProduct />} /> */}
                   <Route path=":id" element={<ShowProductMui />} />
                   {/* <Route path=":id/edit" element={<EditProduct />} /> */}
@@ -90,7 +94,8 @@ export default function App(): JSX.Element {
                   <Route path="create" element={<CreateProductMui />} />
                 </Route>
                 <Route path="/categories">
-                  <Route index element={<ListCategoriesMui />} />
+                  {/* <Route index element={<ListCategoriesMui />} /> */}
+                  <Route index element={<FormTestMui />} />
                 </Route>
               </Route>
               <Route
