@@ -30,31 +30,33 @@ import {
     randomId,
     randomArrayItem,
 } from '@mui/x-data-grid-generator';
+import RichTextEditorModal from './richText';
+import { Content } from 'antd/es/layout/layout';
 
 const initialRows: GridRowsProp = [
     {
         id: randomId(),
-        nom: randomTraderName(),
+        nom: "annonce 1",
         contenu: randomTraderName(),
     },
     {
         id: randomId(),
-        nom: randomTraderName(),
+        nom: "annonce 2",
         contenu: randomTraderName(),
     },
     {
         id: randomId(),
-        nom: randomTraderName(),
+        nom: "annonce 3",
         contenu: randomTraderName(),
     },
     {
         id: randomId(),
-        nom: randomTraderName(),
+        nom: "annonce 4",
         contenu: randomTraderName(),
     },
     {
         id: randomId(),
-        nom: randomTraderName(),
+        nom: "annonce 5",
         contenu: randomTraderName(),
     },
 ];
@@ -100,6 +102,8 @@ function EditToolbar(props: EditToolbarProps) {
 export default function ListAnnonce() {
     const [rows, setRows] = React.useState(initialRows);
     const [rowModesModel, setRowModesModel] = React.useState<GridRowModesModel>({});
+    const [editorOpen, setEditorOpen] = React.useState(false);
+    const [currentRow, setCurrentRow] = React.useState<any>(null);
 
     const handleRowEditStop: GridEventListener<'rowEditStop'> = (params, event) => {
         if (params.reason === GridRowEditStopReasons.rowFocusOut) {
@@ -108,7 +112,10 @@ export default function ListAnnonce() {
     };
 
     const handleEditClick = (id: GridRowId) => () => {
-        setRowModesModel({ ...rowModesModel, [id]: { mode: GridRowModes.Edit } });
+        // setRowModesModel({ ...rowModesModel, [id]: { mode: GridRowModes.Edit } });
+        const row = rows.find((row) => row.id === id);
+        setCurrentRow(row);
+        setEditorOpen(true);
     };
 
     const handleSaveClick = (id: GridRowId) => () => {
@@ -131,24 +138,27 @@ export default function ListAnnonce() {
         }
     };
 
-    const processRowUpdate = (newRow:GridRowModel) => {
+    const processRowUpdate = (newRow: GridRowModel) => {
         const updatedRow = { ...newRow, isNew: false };
         setRows(rows.map((row) => (row.id === newRow.id ? updatedRow : row)));
         return updatedRow;
     };
 
-    const handleRowModesModelChange = (newRowModesModel:GridRowModesModel) => {
+    const handleRowModesModelChange = (newRowModesModel: GridRowModesModel) => {
         setRowModesModel(newRowModesModel);
     };
 
     const columns: GridColDef[] = [
-        { field: 'nom', headerName: 'Nom de annonce', flex: 1, minWidth: 180, editable: true },
-        { field: 'contenu', headerName: 'Contenue',flex: 1, minWidth: 180, editable: true },
+        { field: 'nom', headerName: 'Nom de annonce', flex: 1, minWidth: 180, editable: true, headerAlign: 'center', align: 'center' },
+        { field: 'contenu', headerName: 'Contenue', flex: 1, minWidth: 180, editable: true, headerAlign: 'center', align: 'center' },
         {
             field: 'actions',
             type: 'actions',
             headerName: 'Actions',
-            flex: 1, minWidth: 100,
+            flex: 1,
+            minWidth: 100,
+            headerAlign: 'center',
+            align: 'center',
             cellClassName: 'actions',
             getActions: ({ id }) => {
                 const isInEditMode = rowModesModel[id]?.mode === GridRowModes.Edit;
@@ -195,7 +205,6 @@ export default function ListAnnonce() {
     return (
         <Box
             sx={{
-                height: 375,
                 width: '100%',
                 '& .actions': {
                     color: 'text.secondary',
@@ -203,34 +212,45 @@ export default function ListAnnonce() {
                 '& .textPrimary': {
                     color: 'text.primary',
                 },
-                marginBottom: 6,
                 // gap:2,
                 // flexDirection:'column',
                 // display:'flex'
             }}
         >
             <Typography variant="body1" >List d'annonce</Typography>
-            <DataGrid
-                rows={rows}
-                columns={columns}
-                editMode="row"
-                rowModesModel={rowModesModel}
-                onRowModesModelChange={handleRowModesModelChange}
-                onRowEditStop={handleRowEditStop}
-                processRowUpdate={processRowUpdate}
-                slots={{
-                    // toolbar: EditToolbar,
-                    footer: EditToolbar,
-                }}
-                slotProps={{
-                    // toolbar: { setRows, setRowModesModel },
-                    footer: { setRows, setRowModesModel }as any,
-                    // 疑问
-                }}
-                sx={{
-                    '&, .MuiDataGrid': { border: 'none', borderBottom:'1px solid #E0E0E0',borderRadius:0 },
-                    // '&, [class^=MuiDataGrid]': { border: 'none' },
-                    // '& .MuiDataGrid-columnHeader:focus-within': { outline: 'none' },
+            <Box sx={{ height: 370 }}>
+                <DataGrid
+                    rows={rows}
+                    columns={columns}
+                    editMode="row"
+                    rowModesModel={rowModesModel}
+                    onRowModesModelChange={handleRowModesModelChange}
+                    onRowEditStop={handleRowEditStop}
+                    processRowUpdate={processRowUpdate}
+                    slots={{
+                        // toolbar: EditToolbar,
+                        footer: EditToolbar,
+                    }}
+                    slotProps={{
+                        // toolbar: { setRows, setRowModesModel },
+                        footer: { setRows, setRowModesModel } as any,
+                        // 疑问
+                    }}
+                    sx={{
+                        '&, .MuiDataGrid': { border: 'none', borderBottom: '1px solid #E0E0E0', borderRadius: 0 },
+                        '& .MuiDataGrid-columnHeader:focus-within': { outline: 'none' },
+                    }}
+                />
+            </Box>
+            <RichTextEditorModal
+                open={editorOpen}
+                onClose={() => setEditorOpen(false)}
+                initialContent={currentRow?.contenu || ''}
+                onSave={(content: string) => {
+                    if (currentRow) {
+                        const updatedRow = { ...currentRow, contenu: content };
+                        setRows(rows.map((row) => (row.id === currentRow.id ? updatedRow : row)));
+                    }
                 }}
             />
         </Box>

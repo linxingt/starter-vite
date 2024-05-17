@@ -8,41 +8,9 @@ import Tabs from '@mui/material/Tabs';
 import Tab from '@mui/material/Tab';
 import Typography from '@mui/material/Typography';
 import Box from '@mui/material/Box';
+import TabPanel from './TabPanel';
 
-interface TabPanelProps {
-  children?: React.ReactNode;
-  dir?: string;
-  index: number;
-  value: number;
-}
-
-function TabPanel(props:TabPanelProps) {
-  const { children, value, index, ...other } = props;
-
-  return (
-    <div
-      role="tabpanel"
-      hidden={value !== index}
-      id={`full-width-tabpanel-${index}`}
-      aria-labelledby={`full-width-tab-${index}`}
-      {...other}
-    >
-      {value === index && (
-        <Box sx={{ p: 3 }}>
-          <Typography>{children}</Typography>
-        </Box>
-      )}
-    </div>
-  );
-}
-
-TabPanel.propTypes = {
-  children: PropTypes.node,
-  index: PropTypes.number.isRequired,
-  value: PropTypes.number.isRequired,
-};
-
-function a11yProps(index:number) {
+function a11yProps(index: number) {
   return {
     id: `full-width-tab-${index}`,
     'aria-controls': `full-width-tabpanel-${index}`,
@@ -82,46 +50,48 @@ export default function URLTabs() {
           <Tab label="Plateforme Livraison URL" {...a11yProps(1)} />
         </Tabs>
       </AppBar>
-      <TabPanel value={value} index={0} dir={theme.direction} >
-        <Box sx={{ display: "flex", flexDirection: "column", gap: 2 }}>
-          <Box sx={{ display: "flex", flexDirection: "row", alignItems: "center", justifyContent: "space-between" }}>
-            Google URL :
-            <TextField id="googleUrl" variant="outlined" size="small" fullWidth sx={{ width: "70%" }} />
+      <Box sx={{ border: 1, borderColor: "#C4C4C4" }}>
+        <TabPanel value={value} index={0} dir={theme.direction} >
+          <Box sx={{ display: "flex", flexDirection: "column", gap: 1 }}>
+            <Box sx={{ display: "flex", flexDirection: "row", alignItems: "center", justifyContent: "space-between", paddingLeft: "5%" }}>
+              Google URL :
+              <TextField id="googleUrl" variant="outlined" size="small" fullWidth sx={{ width: "80%" }} />
+            </Box>
+            <Box sx={{ display: "flex", flexDirection: "row", alignItems: "center", justifyContent: "space-between", paddingLeft: "5%" }}>
+              Facebook URL :
+              <TextField id="facebookUrl" variant="outlined" size="small" fullWidth sx={{ width: "80%" }} />
+            </Box>
+            <Box sx={{ display: "flex", flexDirection: "row", alignItems: "center", justifyContent: "space-between", paddingLeft: "5%" }}>
+              Instagram URL :
+              <TextField id="instagramUrl" variant="outlined" size="small" fullWidth sx={{ width: "80%" }} />
+            </Box>
+            <Box sx={{ display: "flex", flexDirection: "row", alignItems: "center", justifyContent: "space-between", paddingLeft: "5%" }}>
+              Tiktok URL :
+              <TextField id="tiktokUrl" variant="outlined" size="small" fullWidth sx={{ width: "80%" }} />
+            </Box>
           </Box>
-          <Box sx={{ display: "flex", flexDirection: "row", alignItems: "center", justifyContent: "space-between" }}>
-            Facebook URL :
-            <TextField id="facebookUrl" variant="outlined" size="small" fullWidth sx={{ width: "70%" }} />
+        </TabPanel>
+        <TabPanel value={value} index={1} dir={theme.direction}>
+          <Box sx={{ display: "flex", flexDirection: "column", gap: 1 }}>
+            <Box sx={{ display: "flex", flexDirection: "row", alignItems: "center", justifyContent: "space-between", paddingLeft: "5%" }}>
+              Uber Eat URL :
+              <TextField id="uberEatUrl" variant="outlined" size="small" fullWidth sx={{ width: "80%" }} />
+            </Box>
+            <Box sx={{ display: "flex", flexDirection: "row", alignItems: "center", justifyContent: "space-between", paddingLeft: "5%" }}>
+              Delivero URL :
+              <TextField id="deliveroUrl" variant="outlined" size="small" fullWidth sx={{ width: "80%" }} />
+            </Box>
+            <Box sx={{ display: "flex", flexDirection: "row", alignItems: "center", justifyContent: "space-between", paddingLeft: "5%" }}>
+              JustFat URL :
+              <TextField id="justFatUrl" variant="outlined" size="small" fullWidth sx={{ width: "80%" }} />
+            </Box>
+            <Box sx={{ display: "flex", flexDirection: "row", alignItems: "center", justifyContent: "space-between", paddingLeft: "5%" }}>
+              Panda URL :
+              <TextField id="pandaUrl" variant="outlined" size="small" fullWidth sx={{ width: "80%" }} />
+            </Box>
           </Box>
-          <Box sx={{ display: "flex", flexDirection: "row", alignItems: "center", justifyContent: "space-between" }}>
-            Instagram URL :
-            <TextField id="instagramUrl" variant="outlined" size="small" fullWidth sx={{ width: "70%" }} />
-          </Box>
-          <Box sx={{ display: "flex", flexDirection: "row", alignItems: "center", justifyContent: "space-between" }}>
-            Tiktok URL :
-            <TextField id="tiktokUrl" variant="outlined" size="small" fullWidth sx={{ width: "70%" }} />
-          </Box>
-        </Box>
-      </TabPanel>
-      <TabPanel value={value} index={1} dir={theme.direction}>
-        <Box sx={{ display: "flex", flexDirection: "column", gap: 2 }}>
-          <Box sx={{ display: "flex", flexDirection: "row", alignItems: "center", justifyContent: "space-between" }}>
-            Uber Eat URL :
-            <TextField id="uberEatUrl" variant="outlined" size="small" fullWidth sx={{ width: "70%" }} />
-          </Box>
-          <Box sx={{ display: "flex", flexDirection: "row", alignItems: "center", justifyContent: "space-between" }}>
-            Delivero URL :
-            <TextField id="deliveroUrl" variant="outlined" size="small" fullWidth sx={{ width: "70%" }} />
-          </Box>
-          <Box sx={{ display: "flex", flexDirection: "row", alignItems: "center", justifyContent: "space-between" }}>
-            JustFat URL :
-            <TextField id="justFatUrl" variant="outlined" size="small" fullWidth sx={{ width: "70%" }} />
-          </Box>
-          <Box sx={{ display: "flex", flexDirection: "row", alignItems: "center", justifyContent: "space-between" }}>
-            Panda URL :
-            <TextField id="pandaUrl" variant="outlined" size="small" fullWidth sx={{ width: "70%" }} />
-          </Box>
-        </Box>
-      </TabPanel>
+        </TabPanel>
+      </Box>
     </Box>
   );
 }

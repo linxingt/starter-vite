@@ -10,6 +10,12 @@ import CancelIcon from '@mui/icons-material/Close';
 import Tabs, { tabsClasses } from '@mui/material/Tabs';
 import Tab from '@mui/material/Tab';
 import Typography from '@mui/material/Typography';
+import { useTheme } from '@mui/material/styles';
+import TabPanel from './TabPanel';
+import { DatePicker } from '@mui/x-date-pickers/DatePicker';
+import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
+import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
+import dayjs, { Dayjs } from 'dayjs';
 import {
     GridRowsProp,
     GridRowModesModel,
@@ -30,6 +36,13 @@ import {
     randomId,
     randomArrayItem,
 } from '@mui/x-data-grid-generator';
+
+function a11yProps(index: number) {
+    return {
+        id: `full-width-tab-${index}`,
+        'aria-controls': `full-width-tabpanel-${index}`,
+    };
+}
 
 const initialRows: GridRowsProp = [
     {
@@ -98,9 +111,11 @@ function EditToolbar(props: EditToolbarProps) {
 }
 
 export default function DateNonReservable() {
+    const [value, setValue] = React.useState(2);
+    const [selectedYear, setSelectedYear] = React.useState(new Date().getFullYear());
     const [rows, setRows] = React.useState(initialRows);
     const [rowModesModel, setRowModesModel] = React.useState<GridRowModesModel>({});
-
+    const theme = useTheme();
     const handleRowEditStop: GridEventListener<'rowEditStop'> = (params, event) => {
         if (params.reason === GridRowEditStopReasons.rowFocusOut) {
             event.defaultMuiPrevented = true;
@@ -142,21 +157,36 @@ export default function DateNonReservable() {
     };
 
     const columns: GridColDef[] = [
-        { field: 'note', headerName: 'Note', width: 180, editable: true, headerAlign: 'center', sortable: false,align:'center' },
+        { field: 'note', headerName: 'Note', flex: 1, minWidth: 180, editable: true, headerAlign: 'center', align:'center' },
         {
             field: 'date',
             headerName: 'Date',
-            type: 'date',
-            width: 180,
-            editable: true,
+            // type: 'date',
+            flex: 1, minWidth: 180,
+            editable: false,
             headerAlign: 'center',
-            align:'center'
+            align:'center',
+            renderCell: (params) => {
+                // console.log(rows[params.row.id - 1].midi)
+                return <LocalizationProvider dateAdapter={AdapterDayjs}>
+                    <DatePicker
+                        value={params.row.dateDebut}
+                        onChange={(newValue) => {
+                            const updatedRows = rows;
+                            updatedRows[params.row.id - 1].dateDebut = newValue;
+                            setRows(updatedRows);
+                        }}
+                        minDate={dayjs().year(selectedYear).startOf('year')}
+                        maxDate={dayjs().year(selectedYear).endOf('year')}
+                    />
+                </LocalizationProvider>
+            }
         },
         {
             field: 'actions',
             type: 'actions',
             headerName: 'Actions',
-            width: 100,
+            flex: 1, minWidth: 100,
             cellClassName: 'actions',
             getActions: ({ id }) => {
                 const isInEditMode = rowModesModel[id]?.mode === GridRowModes.Edit;
@@ -205,7 +235,7 @@ export default function DateNonReservable() {
     return (
         <Box
             sx={{
-                height: 370,
+                // height: 370,
                 width: '100%',
                 '& .actions': {
                     color: 'text.secondary',
@@ -225,9 +255,9 @@ export default function DateNonReservable() {
             >
                 <Typography variant="body1" >Dates non reservable</Typography >
                 <Tabs
-                    // value={selectedYear}
-                    // onChange={handleYearChange}
-                    variant="scrollable"
+                   value={value}
+                   onChange={(event: React.SyntheticEvent, newValue: number) => { setValue(newValue); setSelectedYear(years[newValue]) }}
+                   variant="scrollable"
                     scrollButtons="auto"
                     allowScrollButtonsMobile
                     sx={{
@@ -241,35 +271,44 @@ export default function DateNonReservable() {
                     }}
 
                 >
-                    {years.map((year) => (
-                        <Tab key={year} label={year} value={year.toString()} />
+                    {years.map((value, index, array) => (
+                        <Tab label={value} {...a11yProps(index)} />
                     ))}
                 </Tabs>
             </Box>
-            <DataGrid
-                rows={rows}
-                columns={columns}
-                editMode="row"
-                disableColumnMenu
-                rowModesModel={rowModesModel}
-                onRowModesModelChange={handleRowModesModelChange}
-                onRowEditStop={handleRowEditStop}
-                processRowUpdate={processRowUpdate}
-                slots={{
-                    // toolbar: EditToolbar,
-                    footer: EditToolbar,
-                }}
-                slotProps={{
-                    // toolbar: { setRows, setRowModesModel },
-                    footer: { setRows, setRowModesModel }as any,
-                    // 疑问
-                }}
-                sx={{
-                    '&, .MuiDataGrid': { border: 'none', borderBottom:'1px solid #E0E0E0',borderRadius:0 },
-                    // '&, [class^=MuiDataGrid]': { border: 'none' },
-                    // '& .MuiDataGrid-columnHeader:focus-within': { outline: 'none' },
-                }}
-            />
+            {years.map((year, index, array) => (
+                <TabPanel value={value} index={index} dir={theme.direction} >
+                    <Box
+                        sx={{
+                            height: 395,
+                            width: '100%',
+                        }}
+                    >
+                        <DataGrid
+                            rows={rows}
+                            columns={columns}
+                            editMode="row"
+                            disableColumnMenu
+                            rowModesModel={rowModesModel}
+                            onRowModesModelChange={handleRowModesModelChange}
+                            onRowEditStop={handleRowEditStop}
+                            processRowUpdate={processRowUpdate}
+                            getRowHeight={() => 'auto'}
+                            slots={{
+                                footer: EditToolbar,
+                            }}
+                            slotProps={{
+                                footer: { setRows, setRowModesModel } as any,
+                            }}
+                            sx={{
+                                '&, .MuiDataGrid': { border: 'none', borderBottom: '1px solid #E0E0E0', borderRadius: 0 },
+                                '& .MuiDataGrid-cell:focus-within': { outline: 'none' },
+                                '& .MuiDataGrid-columnHeader:focus-within': { outline: 'none' },
+                            }}
+                        />
+                    </Box>
+                </TabPanel>
+            ))}
         </Box>
     );
 }

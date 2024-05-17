@@ -13,6 +13,9 @@ import Typography from '@mui/material/Typography';
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
+import dayjs, { Dayjs } from 'dayjs';
+import TabPanel from './TabPanel';
+import { useTheme } from '@mui/material/styles';
 import {
     GridRowsProp,
     GridRowModesModel,
@@ -27,6 +30,7 @@ import {
     GridRowEditStopReasons,
     GridValueGetterParams,
     GridValueSetterParams,
+    GridRowSpacingParams
     // GridSlots,
 } from '@mui/x-data-grid';
 import {
@@ -35,6 +39,13 @@ import {
     randomId,
     randomArrayItem,
 } from '@mui/x-data-grid-generator';
+
+function a11yProps(index: number) {
+    return {
+        id: `full-width-tab-${index}`,
+        'aria-controls': `full-width-tabpanel-${index}`,
+    };
+}
 
 const initialRows: GridRowsProp = [
     {
@@ -108,8 +119,14 @@ function EditToolbar(props: EditToolbarProps) {
 }
 
 export default function FullFeaturedCrudGrid() {
+    const [value, setValue] = React.useState(2);
+    const [selectedYear, setSelectedYear] = React.useState(new Date().getFullYear());
     const [rows, setRows] = React.useState(initialRows);
     const [rowModesModel, setRowModesModel] = React.useState<GridRowModesModel>({});
+    const theme = useTheme();
+    // console.log(dayjs().year(2023).endOf('year'))
+    // console.log(dayjs().year(selectedYear).endOf('year'))
+    // console.log(selectedYear)
 
     const handleRowEditStop: GridEventListener<'rowEditStop'> = (params, event) => {
         if (params.reason === GridRowEditStopReasons.rowFocusOut) {
@@ -156,12 +173,27 @@ export default function FullFeaturedCrudGrid() {
         {
             field: 'dateDebut',
             headerName: 'Date de debut',
-            type: 'date',
+            // type: 'date',
             flex: 1,
             minWidth: 180,
-            editable: true,
+            editable: false,
             headerAlign: 'center',
-            align: 'center'
+            align: 'center',
+            renderCell: (params) => {
+                // console.log(rows[params.row.id - 1].midi)
+                return <LocalizationProvider dateAdapter={AdapterDayjs}>
+                    <DatePicker
+                        value={params.row.dateDebut}
+                        onChange={(newValue) => {
+                            const updatedRows = rows;
+                            updatedRows[params.row.id - 1].dateDebut = newValue;
+                            setRows(updatedRows);
+                        }}
+                        minDate={dayjs().year(selectedYear).startOf('year')}
+                        maxDate={dayjs().year(selectedYear).endOf('year')}
+                    />
+                </LocalizationProvider>
+            }
         },
         {
             field: 'dateFin',
@@ -169,9 +201,24 @@ export default function FullFeaturedCrudGrid() {
             type: 'date',
             flex: 1,
             minWidth: 180,
-            editable: true,
+            editable: false,
             headerAlign: 'center',
             align: 'center',
+            renderCell: (params) => {
+                // console.log(rows[params.row.id - 1].midi)
+                return <LocalizationProvider dateAdapter={AdapterDayjs}>
+                    <DatePicker
+                        value={params.row.dateDebut}
+                        onChange={(newValue) => {
+                            const updatedRows = rows;
+                            updatedRows[params.row.id - 1].dateDebut = newValue;
+                            setRows(updatedRows);
+                        }}
+                        minDate={dayjs().year(selectedYear).startOf('year')}
+                        maxDate={dayjs().year(selectedYear).endOf('year')}
+                    />
+                </LocalizationProvider>
+            }
         },
         {
             field: 'actions',
@@ -227,7 +274,7 @@ export default function FullFeaturedCrudGrid() {
     return (
         <Box
             sx={{
-                height: 375,
+                // height: 400,
                 width: '100%',
                 '& .actions': {
                     color: 'text.secondary',
@@ -235,20 +282,20 @@ export default function FullFeaturedCrudGrid() {
                 '& .textPrimary': {
                     color: 'text.primary',
                 },
-                marginBottom: 6,
+                // marginBottom: 6,
             }}
         >
             <Box
                 sx={{
                     display: 'flex',
                     flexDirection: 'row',
-                    alignItems: "center"
+                    alignItems: "center",
                 }}
             >
                 <Typography variant="body1" >Precision des dates de vacances</Typography >
                 <Tabs
-                    // value={selectedYear}
-                    // onChange={handleYearChange}
+                    value={value}
+                    onChange={(event: React.SyntheticEvent, newValue: number) => { setValue(newValue); setSelectedYear(years[newValue]) }}
                     variant="scrollable"
                     scrollButtons="auto"
                     allowScrollButtonsMobile
@@ -263,32 +310,45 @@ export default function FullFeaturedCrudGrid() {
                     }}
 
                 >
-                    {years.map((year) => (
-                        <Tab key={year} label={year} value={year.toString()} />
+                    {years.map((value, index, array) => (
+                        <Tab label={value} {...a11yProps(index)} />
                     ))}
                 </Tabs>
             </Box>
-            <DataGrid
-                rows={rows}
-                columns={columns}
-                editMode="row"
-                rowModesModel={rowModesModel}
-                onRowModesModelChange={handleRowModesModelChange}
-                onRowEditStop={handleRowEditStop}
-                processRowUpdate={processRowUpdate}
-                slots={{
-                    // toolbar: EditToolbar,
-                    footer: EditToolbar,
-                }}
-                slotProps={{
-                    // toolbar: { setRows, setRowModesModel },
-                    footer: { setRows, setRowModesModel } as any,
-                    // 疑问
-                }}
-                sx={{
-                    '&, .MuiDataGrid': { border: 'none', borderBottom:'1px solid #E0E0E0',borderRadius:0 },
-                }}
-            />
+            {years.map((year, index, array) => (
+                <TabPanel value={value} index={index} dir={theme.direction} >
+                    <Box
+                        sx={{
+                            height: 395,
+                            width: '100%',
+                        }}
+                    >
+                        <DataGrid
+                            rows={rows}
+                            columns={columns}
+                            editMode="row"
+                            rowModesModel={rowModesModel}
+                            onRowModesModelChange={handleRowModesModelChange}
+                            onRowEditStop={handleRowEditStop}
+                            processRowUpdate={processRowUpdate}
+                            getRowHeight={() => 'auto'}
+                            slots={{
+                                footer: EditToolbar,
+                            }}
+                            slotProps={{
+                                footer: { setRows, setRowModesModel } as any,
+                            }}
+                            sx={{
+                                '&, .MuiDataGrid': { border: 'none', borderBottom: '1px solid #E0E0E0', borderRadius: 0 },
+                                '& .MuiDataGrid-cell:focus-within': { outline: 'none' },
+                                '& .MuiDataGrid-columnHeader:focus-within': { outline: 'none' },
+                            }}
+                        />
+                    </Box>
+                </TabPanel>
+            ))}
+
+
         </Box>
     );
 }
