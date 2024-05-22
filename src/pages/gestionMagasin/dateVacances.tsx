@@ -39,6 +39,8 @@ import {
     randomId,
     randomArrayItem,
 } from '@mui/x-data-grid-generator';
+import Select, { SelectChangeEvent } from '@mui/material/Select';
+import MenuItem from '@mui/material/MenuItem';
 
 function a11yProps(index: number) {
     return {
@@ -168,6 +170,29 @@ export default function FullFeaturedCrudGrid() {
         setRowModesModel(newRowModesModel);
     };
 
+    // const updateScrollButtons = () => {
+    //     if (!tabsRef.current) return;
+
+    //     const handleLeftClick = () => {
+    //         setValue((prev) => Math.max(prev - 1, 0));
+    //         if (tabsRef.current) {
+    //             tabsRef.current.scrollTo(tabsRef.current.scrollLeft - 100, 0);
+    //         }
+    //     };
+
+    //     const handleRightClick = () => {
+    //         setValue((prev) => Math.min(prev + 1, years.length - 1));
+    //         if (tabsRef.current) {
+    //             tabsRef.current.scrollTo(tabsRef.current.scrollLeft + 100, 0);
+    //         }
+    //     };
+
+    //     return {
+    //         handleLeftClick,
+    //         handleRightClick,
+    //     };
+    // };
+
     const columns: GridColDef[] = [
         { field: 'nom', headerName: 'Nom de vacances', flex: 1, minWidth: 150, editable: true, headerAlign: 'center', align: 'center' },
         {
@@ -270,7 +295,7 @@ export default function FullFeaturedCrudGrid() {
     ];
 
     const years = Array.from({ length: 7 }, (_, i) => new Date().getFullYear() - 2 + i);
-
+console.log(value)
     return (
         <Box
             sx={{
@@ -293,12 +318,13 @@ export default function FullFeaturedCrudGrid() {
                 }}
             >
                 <Typography variant="body1" >Precision des dates de vacances</Typography >
-                <Tabs
+                {/* <Tabs
                     value={value}
                     onChange={(event: React.SyntheticEvent, newValue: number) => { setValue(newValue); setSelectedYear(years[newValue]) }}
                     variant="scrollable"
-                    scrollButtons="auto"
+                    scrollButtons
                     allowScrollButtonsMobile
+                    action={updateScrollButtons()}
                     sx={{
                         // flexGrow: 1,
                         maxWidth: { xs: 170, sm: 170 },
@@ -308,12 +334,22 @@ export default function FullFeaturedCrudGrid() {
                             '&.Mui-disabled': { opacity: 0.3 },
                         },
                     }}
-
                 >
                     {years.map((value, index, array) => (
                         <Tab label={value} {...a11yProps(index)} />
                     ))}
-                </Tabs>
+                </Tabs> */}
+                <Select
+                    native
+                    value={selectedYear}
+                    size="small"
+                    variant="outlined"
+                    onChange={(event: SelectChangeEvent) => { setValue(years.indexOf(Number(event.target.value)));setSelectedYear(event.target.value) }}
+                >
+                    {years.map((value, index, array) => (
+                        <option value={value} {...a11yProps(index)} >{value}</option>
+                    ))}
+                </Select>
             </Box>
             {years.map((year, index, array) => (
                 <TabPanel value={value} index={index} dir={theme.direction} >

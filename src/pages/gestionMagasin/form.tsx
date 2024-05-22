@@ -30,9 +30,13 @@ export const FormTestMui = () => {
       sx={{ display: "flex", flexDirection: "column", gap: 5 }}
     >
 
-      <Button variant="contained" size="medium" sx={{ width: "10%", alignSelf: 'flex-end' }}>
-        Save
-      </Button>
+      <Box sx={{ position: "fixed", top: 55, height: 60, bgcolor: "white", display: "flex", flexDirection: "row", width: "100%", zIndex: 10, paddingLeft: "75%", paddingTop: 2, paddingBottom: 1 }}>
+        <Button variant="contained" size="medium" sx={{ width: "10%" }}>
+          Save
+        </Button>
+      </Box>
+
+      <Box sx={{ height: 50 }}></Box>
 
       <Box sx={{ display: "flex", flexDirection: "row", gap: 7, alignItems: "center" }}>
         <Typography variant="body1" >Ouverture du site</Typography >
@@ -51,7 +55,7 @@ export const FormTestMui = () => {
       <FullFeaturedCrudGrid></FullFeaturedCrudGrid>
 
       <Box sx={{ display: "flex", flexDirection: "row", alignItems: "center", justifyContent: "space-between" }}>
-      <Typography variant="body1" >Annonce pour des vacances</Typography >
+        <Typography variant="body1" >Annonce pour des vacances</Typography >
         <TextField id="annonceVancances" variant="outlined" size="small" fullWidth sx={{ width: "70%" }} />
       </Box>
 
@@ -59,7 +63,7 @@ export const FormTestMui = () => {
         <Typography variant="body1" >Horaires de livraison</Typography >
         <RadioGroup
           row
-          sx={{gap:5}}
+          sx={{ gap: 5 }}
         >
           <FormControlLabel value="midi" control={<Radio size="small" />} label="Midi" />
           <FormControlLabel value="soir" control={<Radio size="small" />} label="Soir" />

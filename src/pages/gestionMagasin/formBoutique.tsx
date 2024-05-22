@@ -38,12 +38,16 @@ export const FormTestMuiBoutique = () => {
     // <Edit>
     <Box
       component="form"
-      sx={{ display: "flex", flexDirection: "column", gap: 2 }}
+      sx={{ display: "flex", flexDirection: "column", gap: 2, marginLeft: "1%", marginRight: "5%" }}
     >
 
-      <Button variant="contained" size="medium" sx={{ width: "10%", alignSelf: 'flex-end' }}>
-        Save
-      </Button>
+      <Box sx={{ position: "fixed", top: 55, height: 60, bgcolor: "white", display: "flex", flexDirection: "row", width: "100%", zIndex: 10, paddingLeft: "75%", paddingTop: 2, paddingBottom: 1 }}>
+        <Button variant="contained" size="medium" sx={{ width: "10%" }}>
+          Save
+        </Button>
+      </Box>
+
+      <Box sx={{ height: 50 }}></Box>
 
       <Box sx={{ display: "flex", flexDirection: "row", justifyContent: "space-around" }}>
         <Box sx={{ display: "flex", flexDirection: "column", gap: 2, width: "40%" }}>
@@ -95,25 +99,25 @@ export const FormTestMuiBoutique = () => {
 
       <HorairesBou></HorairesBou>
 
-      <Box sx={{ display: "flex", flexDirection: "row", alignItems: "center", gap: 5, width:"80%",justifyContent:'space-between' }}>
+      <Box sx={{ display: "flex", flexDirection: "row", alignItems: "center", gap: 5, width: "80%", justifyContent: 'space-between' }}>
         <Typography variant="body1" >Delais a emporter</Typography>
-        <Box sx={{ display: "flex", flexDirection: "row", alignItems: "center", gap: 1}}>
+        <Box sx={{ display: "flex", flexDirection: "row", alignItems: "center", gap: 1 }}>
           <NumberInputBasic />
           <Typography variant="body1" >minutes</Typography>
         </Box>
       </Box>
 
-      <Box sx={{ display: "flex", flexDirection: "row", alignItems: "center", gap: 5, width:"80%",justifyContent:'space-between' }}>
+      <Box sx={{ display: "flex", flexDirection: "row", alignItems: "center", gap: 5, width: "80%", justifyContent: 'space-between' }}>
         <Typography variant="body1" >Delais a livraison</Typography>
-        <Box sx={{ display: "flex", flexDirection: "row", alignItems: "center", gap: 1}}>
+        <Box sx={{ display: "flex", flexDirection: "row", alignItems: "center", gap: 1 }}>
           <NumberInputBasic />
           <Typography variant="body1" >minutes</Typography>
         </Box>
       </Box>
 
-      <Box sx={{ display: "flex", flexDirection: "row", alignItems: "center", gap: 5, width:"80%",justifyContent:'space-between' }}>
+      <Box sx={{ display: "flex", flexDirection: "row", alignItems: "center", gap: 5, width: "80%", justifyContent: 'space-between' }}>
         <Typography variant="body1" >intervalle de temps</Typography>
-        <Box sx={{ display: "flex", flexDirection: "row", alignItems: "center", gap: 1}}>
+        <Box sx={{ display: "flex", flexDirection: "row", alignItems: "center", gap: 1 }}>
           <NumberInputBasic />
           <Typography variant="body1" >minutes</Typography>
         </Box>
@@ -130,6 +134,7 @@ export const FormTestMuiBoutique = () => {
       </Box>
 
       <DateNonReservable></DateNonReservable>
+      {/* select au lieu tabs 2024 */}
 
     </Box>
     // </Edit>

@@ -117,7 +117,7 @@ export default function EditorMenuControls() {
       unlikely to have a keyboard that will allow for using Tab/Shift+Tab. These
       buttons probably aren't necessary for keyboard users and would add extra
       clutter. */}
-      {/* {isTouchDevice() && (
+      {isTouchDevice() && (
         <>
           <MenuButtonIndent />
 
@@ -135,9 +135,11 @@ export default function EditorMenuControls() {
 
       <MenuButtonCodeBlock />
 
-      <MenuDivider /> */}
-{/* 
-      <MenuButtonImageUpload
+      <MenuDivider />
+
+
+{/* <MenuButtonAddTable /> */}
+      {/* <MenuButtonImageUpload
         onUploadFiles={(files) =>
           // For the sake of a demo, we don't have a server to upload the files
           // to, so we'll instead convert each one to a local "temporary" object
@@ -151,13 +153,12 @@ export default function EditorMenuControls() {
             alt: file.name,
           }))
         }
-      />
+      /> */}
 
       <MenuDivider />
 
       <MenuButtonHorizontalRule />
 
-      <MenuButtonAddTable />
 
       <MenuDivider />
 
@@ -166,7 +167,7 @@ export default function EditorMenuControls() {
       <MenuDivider />
 
       <MenuButtonUndo />
-      <MenuButtonRedo /> */}
+      <MenuButtonRedo />
     </MenuControlsContainer>
   );
 }
